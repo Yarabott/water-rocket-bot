@@ -1,0 +1,485 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Water Rocket Project Assistant</title>
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #eef5fa;
+    color: #243447;
+}
+header {
+    background: linear-gradient(135deg,#0879b9,#064c80);
+    color: white;
+    text-align: center;
+    padding: 30px 15px;
+}
+.container {
+    max-width: 850px;
+    margin: 25px auto;
+    padding: 15px;
+}
+.info,.chatbox {
+    background: white;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    box-shadow: 0 3px 12px #00000015;
+}
+.info { padding: 20px; }
+h2 { color: #0879b9; }
+.chat-header {
+    background: #0879b9;
+    color: white;
+    padding: 17px;
+    font-weight: bold;
+}
+#messages {
+    height: 390px;
+    overflow-y: auto;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.message {
+    padding: 12px 15px;
+    border-radius: 12px;
+    max-width: 85%;
+    line-height: 1.5;
+    white-space: pre-wrap;
+}
+.bot { background: #e8f3fa; align-self: flex-start; }
+.user { background: #0879b9; color: white; align-self: flex-end; }
+.suggestions {
+    padding: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    border-top: 1px solid #eee;
+}
+button {
+    cursor: pointer;
+    border: none;
+    border-radius: 8px;
+    padding: 11px 15px;
+}
+.suggestions button {
+    background: #e8f3fa;
+    color: #075783;
+}
+.input-area {
+    display: flex;
+    padding: 12px;
+    gap: 10px;
+    border-top: 1px solid #eee;
+}
+input {
+    flex: 1;
+    min-width: 0;
+    padding: 13px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 15px;
+}
+#send { background: #0879b9; color: white; }
+footer {
+    text-align: center;
+    padding: 20px;
+    color: #657786;
+}
+</style>
+</head>
+<body>
+
+<header>
+<h1>🚀 Water Rocket Project Assistant</h1>
+<p>Your interactive guide to our water bottle rocket project.</p>
+</header>
+
+<div class="container">
+
+<section class="info">
+<h2>About Our Project</h2>
+<p>Our project involved designing and launching a water bottle rocket using recyclable materials, water and compressed air.</p>
+<p>The goal was to travel at least 6 metres while keeping the rocket below 50 cm and using non-hazardous materials.</p>
+<p>Our final rocket measured approximately 42 cm and achieved 31.2 metres in its first competition trial.</p>
+</section>
+
+<div class="chatbox">
+<div class="chat-header">💬 Ask the Water Rocket Assistant</div>
+
+<div id="messages">
+<div class="message bot">Hello! 👋 Welcome to our Water Rocket Project Assistant!
+
+I can explain our rocket's design, materials, engineering principles, testing results, safety guidelines and more.
+
+What would you like to know?</div>
+</div>
+
+<div class="suggestions">
+<button onclick="ask('How does our water rocket work?')">How does it work?</button>
+<button onclick="ask('What materials did we use?')">Materials</button>
+<button onclick="ask('Explain the engineering principles.')">Engineering</button>
+<button onclick="ask('What were our test results?')">Test results</button>
+<button onclick="ask('What safety precautions did we follow?')">Safety</button>
+<button onclick="ask('How is our project sustainable?')">Sustainability</button>
+<button onclick="ask('What problems did we encounter?')">Troubleshooting</button>
+<button onclick="ask('What is the difference between our prototype and final rocket?')">Prototype vs final</button>
+<button onclick="ask('Show me frequently asked questions.')">FAQs</button>
+</div>
+
+<div class="input-area">
+<input type="text" id="question" placeholder="Ask a question..." onkeydown="if(event.key==='Enter') sendMessage()">
+<button id="send" onclick="sendMessage()">Send</button>
+</div>
+</div>
+</div>
+
+<footer>Water Bottle Rocket Project | Educational Assistant</footer>
+
+<script>
+const knowledge = [
+
+{
+keys:["how","work","mechanism","launch"],
+answer:`Our water rocket works using compressed air and water.
+
+Compressed air builds up inside the bottle. When released, it pushes water out through the opening.
+
+According to Newton's Third Law, every action has an equal and opposite reaction. The water moves downwards, producing an upward thrust that propels the rocket into the air.
+
+The rocket then follows a projectile trajectory under gravity.`
+},
+
+{
+keys:["material","made","build","component"],
+answer:`Our final rocket used:
+• Two 1.25 L Pepsi bottles
+• Waterproof black duct tape
+• Cardboard for fins
+• Paper for the nose cone
+• Hot glue
+• A bottle cap
+
+Our approximate total budget was 23 AED.`
+},
+
+{
+keys:["design","shape","dimension","length","42","50"],
+answer:`Our final rocket was approximately 42 cm long.
+
+It consisted of two bottle sections joined using waterproof black tape. One end had a paper cone, while the opposite end had the bottle opening used for the launcher connection.
+
+Cardboard fins were attached near the bottle-cap end.
+
+The competition required a rocket shorter than 50 cm.`
+},
+
+{
+keys:["prototype","difference","change","improvement"],
+answer:`Our original prototype used two 1.5 L water bottles.
+
+We changed to two 1.25 L Pepsi bottles because we considered the thinner water bottles more likely to rupture under compressed air.
+
+We also added a paper nose cone to reduce drag and aligned the cardboard fins more accurately to improve stability.`
+},
+
+{
+keys:["thrust","newton","third law","force"],
+answer:`Thrust is the force that pushes the rocket upwards.
+
+Water is expelled downwards from the bottle. Newton's Third Law explains why the rocket experiences an opposite upward reaction force.
+
+The rocket accelerates when thrust exceeds its weight and other opposing forces.`
+},
+
+{
+keys:["pressure","compressed air"],
+answer:`Compressed air stores energy inside the rocket.
+
+When released, the air expands and pushes water out of the opening, producing thrust.
+
+The competition hosts determined the air pressure used during the competition. Our team did not independently select or record that pressure.`
+},
+
+{
+keys:["nozzle","diameter","28","opening"],
+answer:`Our rocket had an opening with an approximate diameter of 28 mm.
+
+The nozzle controls how water exits the rocket. Its diameter influences the flow rate and duration of thrust.
+
+The ideal design depends on pressure, water volume and rocket mass.`
+},
+
+{
+keys:["water","volume","fill","third"],
+answer:`Our team selected a water fill of approximately one-third of the bottle's volume.
+
+A common starting point for water rockets is around 25–40% of the bottle's capacity.
+
+Water acts as reaction mass. Too much water leaves less room for compressed air, while too little water provides less reaction mass.`
+},
+
+{
+keys:["stability","fin","fins","direction","straight"],
+answer:`The cardboard fins help keep our rocket stable during flight.
+
+We carefully aligned the fins more straight and evenly to improve directional stability and reduce unwanted sideways movement.`
+},
+
+{
+keys:["aerodynamic","drag","cone","air resistance"],
+answer:`Aerodynamics explains how air affects a moving rocket.
+
+Air resistance, also called drag, acts against the rocket's motion.
+
+We added a cone-shaped paper nose to help the rocket move through the air more smoothly and reduce drag.
+
+The cardboard fins help maintain a stable direction.`
+},
+
+{
+keys:["projectile","trajectory","gravity","motion","angle"],
+answer:`After leaving the launcher, the rocket follows projectile motion.
+
+Gravity pulls the rocket downwards while its horizontal motion continues due to momentum.
+
+Its trajectory depends on launch speed, angle, gravity and air resistance.
+
+The competition hosts determined the launch angle.
+
+Our recorded horizontal distance was 31.2 metres.`
+},
+
+{
+keys:["weight","mass","90","360","450"],
+answer:`Our rocket weighed approximately 90 grams without water.
+
+Its estimated mass with water was around 360–450 grams.
+
+These are approximate recorded values.
+
+Mass affects acceleration because a heavier rocket requires more thrust to achieve the same acceleration.`
+},
+
+{
+keys:["launcher","base","pump","air supply"],
+answer:`The launcher holds the rocket in position and provides the compressed-air connection.
+
+Our example launcher design included a base with a retaining component and an electric air pump.
+
+The competition launcher and its pressure settings were controlled by the organizers.`
+},
+
+{
+keys:["test","testing","procedure","trial","competition"],
+answer:`We were given an opportunity to test our rocket one week before the competition.
+
+This allowed us to observe its performance and identify improvements.
+
+We improved the fin alignment and added a paper nose cone.
+
+During the competition, we were allowed two trials in case the first launch was unsuccessful.`
+},
+
+{
+keys:["result","distance","31.2","6 metre","6 meter","performance"],
+answer:`Our first competition trial achieved a horizontal distance of 31.2 metres.
+
+The competition required at least 6 metres to qualify.
+
+We exceeded the required distance by 25.2 metres.
+
+The launch angle and air pressure were determined by the competition hosts.`
+},
+
+{
+keys:["safety","safe","hazard","precaution"],
+answer:`Our main safety guidelines included:
+
+• Wear protective eyewear.
+• Keep spectators at least 10 metres away.
+• Never stand over the rocket.
+• Launch outdoors in an open area.
+• Never aim at people, buildings or animals.
+• Use water only for pressurization tests.
+• Follow the organizers' pressure limits and use an appropriate gauge.
+• Stop using bottles that are scratched, cracked, swollen or deformed.
+
+All launches should be supervised by a responsible adult or competition organizer.`
+},
+
+{
+keys:["sustainable","sustainability","environment","recycle","recyclable"],
+answer:`Our project focused on sustainability by using recyclable materials such as plastic bottles, cardboard and paper.
+
+Instead of purchasing a manufactured rocket, we reused everyday materials.
+
+After the project, reusable components can be recovered and recyclable materials sorted appropriately.
+
+This reduces unnecessary material consumption and demonstrates how engineering can use accessible materials.`
+},
+
+{
+keys:["leak","seal","stopper","troubleshoot"],
+answer:`A leak can occur if the rocket does not form a proper seal with the launcher.
+
+Possible causes include a damaged seal or an incorrectly seated connector.
+
+The equipment should be inspected by the supervising organizer before another test.
+
+Never launch a visibly damaged bottle.`
+},
+
+{
+keys:["veer","turn","sideways","off course"],
+answer:`If a rocket veers sideways, possible causes include uneven or misaligned fins and an unstable design.
+
+Our team addressed this by aligning the cardboard fins more carefully to help maintain a straighter trajectory.`
+},
+
+{
+keys:["low","height","short","poor performance"],
+answer:`Rocket performance can be affected by water volume, rocket mass, pressure, nozzle characteristics, aerodynamic drag, fin alignment and launch angle.
+
+Our team improved the rocket by adding a paper cone and aligning its fins.
+
+Competition pressure and launch settings were determined by the organizers.`
+},
+
+{
+keys:["budget","cost","price","23","dirham"],
+answer:`Our approximate total project budget was 23 AED.
+
+• Two Pepsi bottles: approximately 10 AED.
+• Hot glue sticks: approximately 7.5 AED.
+• Waterproof tape: approximately 5.5 AED.
+• Paper: negligible cost.
+
+We kept the project inexpensive using accessible materials.`
+},
+
+{
+keys:["goal","objective","aim","purpose","qualify"],
+answer:`Our main objective was to build a water bottle rocket using recyclable, non-hazardous materials.
+
+Competition requirements:
+• Travel at least 6 metres.
+• Keep the rocket below 50 cm.
+• Use non-hazardous materials.
+
+Our rocket was approximately 42 cm long and travelled 31.2 metres in its first trial.`
+},
+
+{
+keys:["faq","frequently","common"],
+answer:`Frequently Asked Questions:
+
+1. How far did our rocket travel?
+31.2 metres in its first trial.
+
+2. How long was it?
+Approximately 42 cm.
+
+3. What was the water volume?
+Approximately one-third of the bottle.
+
+4. What was the nozzle diameter?
+Approximately 28 mm.
+
+5. What materials did we use?
+Two 1.25 L Pepsi bottles, duct tape, cardboard, paper and hot glue.
+
+6. Why did we add fins?
+To improve directional stability.
+
+7. Why did we add a cone?
+To reduce aerodynamic drag.
+
+8. What was the minimum distance?
+6 metres.`
+},
+
+{
+keys:["hello","hi","hey"],
+answer:`Hello! Welcome to our Water Rocket Project Assistant!
+
+Ask me about our rocket's design, materials, physics, testing results, safety or sustainability.`
+}
+
+];
+
+function findAnswer(question) {
+    const q = question.toLowerCase();
+    let bestAnswer = null;
+    let bestScore = 0;
+
+    for (const item of knowledge) {
+        let score = 0;
+
+        for (const keyword of item.keys) {
+            if (q.includes(keyword)) {
+                score += keyword.includes(" ")
+                    ? keyword.split(" ").length + 1
+                    : 1;
+            }
+        }
+
+        if (score > bestScore) {
+            bestScore = score;
+            bestAnswer = item.answer;
+        }
+    }
+
+    return bestAnswer || `That's a great question!
+
+I can answer questions about:
+• How the rocket works
+• Materials and construction
+• Thrust and Newton's Third Law
+• Air pressure and nozzle diameter
+• Water volume and rocket mass
+• Stability, fins and aerodynamics
+• Projectile motion
+• Testing and results
+• Safety and sustainability
+• Budget and troubleshooting
+
+Try asking about one of these topics!`;
+}
+
+function addMessage(text, sender) {
+    const messages = document.getElementById("messages");
+    const message = document.createElement("div");
+
+    message.className = "message " + sender;
+    message.textContent = text;
+
+    messages.appendChild(message);
+    messages.scrollTop = messages.scrollHeight;
+}
+
+function sendMessage() {
+    const input = document.getElementById("question");
+    const question = input.value.trim();
+
+    if (!question) return;
+
+    addMessage(question, "user");
+    input.value = "";
+
+    addMessage(findAnswer(question), "bot");
+}
+
+function ask(question) {
+    document.getElementById("question").value = question;
+    sendMessage();
+}
+</script>
+
+</body>
+</html>
